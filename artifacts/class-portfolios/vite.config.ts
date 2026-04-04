@@ -11,7 +11,19 @@ if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
 
-const basePath = process.env.BASE_PATH ?? "/";
+/** GitHub Pages: use BASE_PATH=./ so assets work at root or /repo/ without guessing the URL. */
+function resolveBase(): string {
+  const b = process.env.BASE_PATH;
+  if (b === "./" || b === "." || process.env.GITHUB_PAGES === "1") {
+    return "./";
+  }
+  if (b != null && b !== "") {
+    return b.endsWith("/") ? b : `${b}/`;
+  }
+  return "/";
+}
+
+const basePath = resolveBase();
 
 export default defineConfig({
   base: basePath,
