@@ -4,10 +4,10 @@
 # 1. Repo → Settings → Pages → Build and deployment → Source: "GitHub Actions"
 # 2. First run may require approving the `github-pages` environment (org settings)
 #
-# Site URL with owner SPJP-FPL: https://SPJP-FPL.github.io/<this-repo-name>/
-# Create the repo under the SPJP-FPL GitHub user or organization.
-# User-site root (https://SPJP-FPL.github.io/ only): name the repo SPJP-FPL.github.io
-# and change BASE_PATH above to / (single slash).
+# URLs:
+# - Project repo (e.g. SPJP-FPL): https://<owner>.github.io/SPJP-FPL/  → BASE_PATH /SPJP-FPL/
+# - User site repo (*.<owner>.github.io): https://<owner>.github.io/   → BASE_PATH /
+#   (Do NOT use /<repo-name>/ when the repo name ends in .github.io — that breaks assets.)
 
 name: Deploy GitHub Pages
 
@@ -49,10 +49,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Compute Vite base path
+        id: pages_base
+        shell: bash
+        run: |
+          name="${{ github.event.repository.name }}"
+          lower="${name,,}"
+          if [[ "$lower" == *.github.io ]]; then
+            echo "Vite base: / (user/org site at https://${{ github.repository_owner }}.github.io/)"
+            echo "path=/" >> "$GITHUB_OUTPUT"
+          else
+            echo "Vite base: /$name/ (project site)"
+            echo "path=/$name/" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build (GitHub Pages base path)
         env:
-          # Resolves to /<repository-name>/ so assets work at https://<owner>.github.io/<repo>/
-          BASE_PATH: /${{ github.event.repository.name }}/
+          BASE_PATH: ${{ steps.pages_base.outputs.path }}
           NODE_ENV: production
         run: pnpm --filter @workspace/class-portfolios run build
 
