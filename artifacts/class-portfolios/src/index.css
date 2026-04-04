@@ -1,0 +1,78 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: 230 45% 14%;
+  --foreground: 36 10% 12%;
+  --border: 230 20% 30%;
+  --card: 0 0% 100%;
+  --card-foreground: 36 10% 12%;
+  --card-border: 230 20% 80%;
+  --sidebar: 230 45% 14%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-border: 230 20% 30%;
+  --sidebar-primary: 214 38% 47%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 214 38% 40%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-ring: 214 38% 47%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 36 10% 12%;
+  --popover-border: 230 20% 80%;
+  --primary: 214 38% 47%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 36 30% 90%;
+  --secondary-foreground: 36 10% 12%;
+  --muted: 36 20% 93%;
+  --muted-foreground: 36 10% 45%;
+  --accent: 36 30% 90%;
+  --accent-foreground: 36 10% 12%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 36 20% 80%;
+  --ring: 214 38% 47%;
+  --chart-1: 214 38% 47%;
+  --chart-2: 36 62% 57%;
+  --chart-3: 214 38% 35%;
+  --chart-4: 36 30% 70%;
+  --chart-5: 214 38% 60%;
+  --app-font-sans: 'Caveat', cursive;
+  --app-font-serif: 'DM Serif Display', serif;
+  --app-font-mono: 'Special Elite', monospace;
+  --radius: 0.25rem;
+  --primary-border: hsl(214, 38%, 39%);
+  --secondary-border: hsl(36, 30%, 82%);
+  --muted-border: hsl(36, 20%, 85%);
+  --accent-border: hsl(36, 30%, 82%);
+  --destructive-border: hsl(0, 72%, 43%);
+  --sidebar-primary-border: hsl(214, 38%, 39%);
+  --sidebar-accent-border: hsl(214, 38%, 32%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+  }
+}

@@ -1,0 +1,76 @@
+# Deploys the class-portfolios Vite app to GitHub Pages.
+#
+# After pushing to the default branch:
+# 1. Repo → Settings → Pages → Build and deployment → Source: "GitHub Actions"
+# 2. First run may require approving the `github-pages` environment (org settings)
+#
+# Site URL with owner SPJP-FPL: https://SPJP-FPL.github.io/<this-repo-name>/
+# Create the repo under the SPJP-FPL GitHub user or organization.
+# User-site root (https://SPJP-FPL.github.io/ only): name the repo SPJP-FPL.github.io
+# and change BASE_PATH above to / (single slash).
+
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build (GitHub Pages base path)
+        env:
+          # Resolves to /<repository-name>/ so assets work at https://<owner>.github.io/<repo>/
+          BASE_PATH: /${{ github.event.repository.name }}/
+          NODE_ENV: production
+        run: pnpm --filter @workspace/class-portfolios run build
+
+      - name: Add .nojekyll
+        run: touch artifacts/class-portfolios/dist/public/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: artifacts/class-portfolios/dist/public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
