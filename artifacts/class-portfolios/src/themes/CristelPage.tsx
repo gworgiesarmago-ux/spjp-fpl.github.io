@@ -198,7 +198,7 @@ export default function CristelPage({ person, onBack }: Props) {
             <img
               className="cp-bunny cp-bunny-clickable"
               src={`${BASE}bunny2.png`}
-              alt=""
+              alt="Cream plush bunny with pink bows on a bed"
               style={{ animationDelay: '0.7s' }}
               onClick={() => setLightbox({ src: `${BASE}bunny2.png`, caption: '✨' })}
               onKeyDown={e => e.key === 'Enter' && setLightbox({ src: `${BASE}bunny2.png`, caption: '✨' })}
